@@ -1,0 +1,14 @@
+{
+  "name": "simple_fetch_from_url",
+  "dxapi": "1.03rc",
+  "version": "0.1",
+  "inputs": [
+    {"name": "url", "class": "string"}
+  ],
+  "outputs": [
+    {"name": "file", "class": "file"}
+  ],
+  "run": {"file": "main.py",
+          "interpreter": "python2.7",
+          "execDepends": [{"name": "curl"}]}
+}
