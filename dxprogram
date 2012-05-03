@@ -1,5 +1,5 @@
 {
-  "name": "simple_fetch_from_url",
+  "name": "trivial_fetch_from_url",
   "dxapi": "1.03rc",
   "version": "0.1",
   "inputs": [
