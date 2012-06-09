@@ -1,7 +1,7 @@
 {
   "name": "trivial_fetch_from_url",
   "title": "Fetch from URL",
-  "summary": "Fetch a file from a URL and upload it as a file.",
+  "description": "Fetch a file from a URL and upload it as a file.",
   "dxapi": "1.03rc",
   "version": "0.1",
   "inputs": [
@@ -10,7 +10,9 @@
   "outputs": [
     {"name": "file", "class": "file"}
   ],
-  "run": {"file": "main.py",
-          "interpreter": "python2.7",
-          "execDepends": [{"name": "curl"}]}
+  "run": {
+    "file": "main.py",
+    "interpreter": "python2.7",
+    "execDepends": [{"name": "curl"}]
+  }
 }
