@@ -1,4 +1,5 @@
 {
+  "network":["*"],
   "globalWorkspace": [],
   "version": "0.0.5"
 }
