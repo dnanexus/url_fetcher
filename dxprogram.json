@@ -11,6 +11,7 @@
   ],
   "run": {
     "file": "main.py",
-    "interpreter": "python2.7"
+    "interpreter": "python2.7",
+    "execDepends": [{"name": "curl"}]
   }
 }
