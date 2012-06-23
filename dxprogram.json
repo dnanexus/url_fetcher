@@ -12,6 +12,6 @@
   "run": {
     "file": "main.py",
     "interpreter": "python2.7",
-    "execDepends": [{"name": "curl"}]
+    "execDepends": [{"name": "aria2"}]
   }
 }
