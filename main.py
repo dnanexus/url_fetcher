@@ -15,7 +15,7 @@ def main():
     file_name = os.path.basename(url_path)
     if file_name == '':
         file_name = url_path
-    subprocess.check_call(["aria2c", url, "-o", "fetched_from_url", "-x6", "-s6", "-j6"])
+    subprocess.check_call(["aria2c", url, "-o", "fetched_from_url", "-x6", "-s6", "-j6", "--check-certificate=false"])
     file_folder = dxpy.DXJob(job["id"]).describe()['folder']
     print "Uploading file into project " + dxpy.PROJECT_CONTEXT_ID + " (from dxpy.PROJECT_CONTEXT_ID)"
     new_file = dxpy.upload_local_file("fetched_from_url", project = dxpy.PROJECT_CONTEXT_ID, name = file_name, folder = file_folder, parents = True)
