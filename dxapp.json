@@ -1,7 +1,6 @@
 {
   "access": {
-    "network": ["*"],
-    "project": true
+    "network": ["*"]
   },
   "resources": [],
   "version": "0.0.12+block"
