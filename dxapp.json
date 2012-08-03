@@ -1,4 +1,21 @@
 {
+  "name": "trivial_fetch_from_url",
+  "title": "Fetch from URL",
+  "description": "Fetch a file from a URL and upload it as a file.",
+  "dxapi": "1.03rc",
+  "inputSpec": [
+    {"name": "url", "class": "string"}
+  ],
+  "outputSpec": [
+    {"name": "file", "class": "file"}
+  ],
+  "runSpec": {
+    "file": "main.py",
+    "interpreter": "python2.7_old",
+    "execDepends": [{"name": "aria2"}]
+  }
+,
+
   "access": {
     "network": ["*"]
   },
