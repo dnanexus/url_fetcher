@@ -13,12 +13,12 @@
     "file": "main.py",
     "interpreter": "python2.7_old",
     "execDepends": [{"name": "aria2"}]
-  }
-,
-
+  },
   "access": {
-    "network": ["*"]
+    "network": ["*"],
+    "project": "CONTRIBUTE"
   },
   "resources": [],
-  "version": "0.0.12+block"
+  "version": "0.0.15+block",
+  "categories": ["Import"]
 }
