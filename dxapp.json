@@ -2,7 +2,7 @@
   "name": "trivial_fetch_from_url",
   "title": "Fetch from URL",
   "description": "Fetch a file from a URL and upload it as a file.",
-  "dxapi": "1.03rc",
+  "dxapi": "1.0.0",
   "inputSpec": [
     {"name": "url", "class": "string"}
   ],
