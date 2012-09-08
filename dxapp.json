@@ -1,5 +1,5 @@
 {
-  "name": "fetch_from_url",
+  "name": "trivial_fetch_from_url",
   "title": "Fetch from URL",
   "description": "Fetch a file from a URL and upload it as a file.",
   "dxapi": "1.0.0",
@@ -19,6 +19,6 @@
     "project": "CONTRIBUTE"
   },
   "resources": [],
-  "version": "0.0.15+block",
+  "version": "0.0.16+block",
   "categories": ["Import"]
 }
