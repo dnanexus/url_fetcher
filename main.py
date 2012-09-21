@@ -24,8 +24,14 @@ def main():
         subprocess.check_call(["aria2c", url, "-o", "fetched_from_url", "-x6", "-s6", "-j6", "--check-certificate=false"])
         print "Uploading file into project " + dxpy.PROJECT_CONTEXT_ID + " (from dxpy.PROJECT_CONTEXT_ID)"
         new_file = dxpy.upload_local_file("fetched_from_url",
-                                          wait_on_close = True,
+                                          keep_open=True,
                                           use_existing_dxfile = placeholder_dxfile)
+        if 'additional_types' in job['input']:
+            new_file.add_types([x.strip() for x in job['input']['additional_types'].split(",")])
+        if 'output_name' in job['input']:
+            if job['input']['output_name'] != '':
+                new_file.rename(job['input']['output_name'])
+        new_file.close(block=True)
     except:
         placeholder_dxfile.remove()
         raise

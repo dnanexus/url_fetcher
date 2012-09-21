@@ -4,7 +4,10 @@
   "description": "Fetch a file from a URL and upload it as a file.",
   "dxapi": "1.0.0",
   "inputSpec": [
-    {"name": "url", "class": "string"}
+    {"name": "url", "class": "string"},
+    {"name": "additional_types", "class":"string", "label":"Additional Types", "optional":true, "help":"A comma-separated list of additional types to label the imported file with (e.g. \"dbsnp,database\" would label the file as types dbsnp and database)"},
+    {"name": "output_name", "class":"string", "label":"Output Name", "optional":true, "help":"Name to give the downloaded file"}
+
   ],
   "outputSpec": [
     {"name": "file", "class": "file"}
@@ -19,6 +22,6 @@
     "project": "CONTRIBUTE"
   },
   "resources": [],
-  "version": "0.0.16+block",
+  "version": "0.0.17+block",
   "categories": ["Import"]
 }
