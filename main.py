@@ -15,6 +15,8 @@ def main():
     file_name = os.path.basename(url_path)
     if file_name == '':
         file_name = url_path
+    if file_name == '':
+        file_name = url
     file_folder = dxpy.DXJob(job["id"]).describe()['folder']
     placeholder_dxfile = dxpy.new_dxfile(name = file_name,
                                          folder = file_folder,

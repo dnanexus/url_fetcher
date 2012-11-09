@@ -5,8 +5,8 @@
   "dxapi": "1.0.0",
   "inputSpec": [
     {"name": "url", "class": "string"},
-    {"name": "additional_types", "class":"string", "label":"Additional Types", "optional":true, "help":"A comma-separated list of additional types to label the imported file with (e.g. \"dbsnp,database\" would label the file as types dbsnp and database)"},
-    {"name": "output_name", "class":"string", "label":"Output Name", "optional":true, "help":"Name to give the downloaded file"}
+    {"name": "additional_types", "class": "string", "label": "Additional Types", "optional": true, "help": "A comma-separated list of additional types with which to label the imported file (e.g. \"dbsnp,database\" would label the file as types dbsnp and database)"},
+    {"name": "output_name", "class": "string", "label": "Output Name", "optional": true, "help": "Name to give the downloaded file"}
 
   ],
   "outputSpec": [
@@ -22,6 +22,6 @@
     "project": "CONTRIBUTE"
   },
   "resources": [],
-  "version": "0.0.17+block",
+  "version": "0.0.18+block",
   "categories": ["Import"]
 }
