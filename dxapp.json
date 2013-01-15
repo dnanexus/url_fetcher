@@ -14,7 +14,7 @@
   ],
   "runSpec": {
     "file": "main.py",
-    "interpreter": "python2.7_old",
+    "interpreter": "python2.7",
     "execDepends": [{"name": "aria2"}]
   },
   "access": {
