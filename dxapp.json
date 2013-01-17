@@ -21,7 +21,6 @@
     "network": ["*"],
     "project": "CONTRIBUTE"
   },
-  "resources": [],
   "version": "0.0.19+block",
   "categories": ["Import"]
 }
