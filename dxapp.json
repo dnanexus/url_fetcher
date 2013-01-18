@@ -1,5 +1,5 @@
 {
-  "name": "trivial_fetch_from_url",
+  "name": "url_fetcher",
   "title": "Fetch from URL",
   "description": "Fetch a file from a URL and upload it as a file.",
   "dxapi": "1.0.0",
