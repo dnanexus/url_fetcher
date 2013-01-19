@@ -1,26 +1,53 @@
 {
-  "name": "trivial_fetch_from_url",
-  "title": "Fetch from URL",
-  "description": "Fetch a file from a URL and upload it as a file.",
+  "name": "url_fetcher",
+  "title": "URL Fetcher",
+  "summary": "Fetch a file from a URL and upload it as a file.",
   "dxapi": "1.0.0",
+  "version": "0.0.1",
+  "details": {
+    "contactUrl": "http://wiki.dnanexus.com/Apps/url_fetcher"
+  },
+  "resources": [],
   "inputSpec": [
-    {"name": "url", "class": "string"},
-    {"name": "additional_types", "class": "string", "label": "Additional Types", "optional": true, "help": "A comma-separated list of additional types with which to label the imported file (e.g. \"dbsnp,database\" would label the file as types dbsnp and database)"},
-    {"name": "output_name", "class": "string", "label": "Output Name", "optional": true, "help": "Name to give the downloaded file"}
-
+    {
+      "name": "url",
+      "label": "URL",
+      "class": "string",
+      "optional": false
+    },
+    {
+      "name": "output_name",
+      "label": "Output Name",
+      "class": "string",
+      "optional": true
+    },
+    {
+      "name": "tags", 
+      "class": "array:string", 
+      "optional":true, 
+      "label":"Tags", 
+      "help": "A set of tags (string labels) that will be added to the resulting Reads table object. (You can use tags and properties to better describe and organize your data)."
+    },
+    {
+      "name": "properties", 
+      "class":"hash", 
+      "optional":true, 
+      "label":"Properties", 
+      "help":"A set of properties (key/value pairs) that will be added to the resulting Reads table object. (You can use tags and properties to better describe and organize your data)."
+    }
   ],
+
   "outputSpec": [
-    {"name": "file", "class": "file"}
+    {
+      "name": "file",
+      "class": "file"
+    }
   ],
   "runSpec": {
-    "file": "main.py",
     "interpreter": "python2.7",
+    "file": "src/url_fetcher.py",
     "execDepends": [{"name": "aria2"}]
   },
-  "access": {
-    "network": ["*"],
-    "project": "CONTRIBUTE"
-  },
-  "version": "0.0.19+block",
-  "categories": ["Import"]
+  "categories": ["Import"],
+  "access": {"network": ["*"]}
 }
