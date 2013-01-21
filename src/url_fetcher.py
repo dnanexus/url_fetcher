@@ -34,28 +34,26 @@ def main(url, tags=None, properties=None, output_name=None):
 
     print "executing: ", ariaCmd
 
-    try:
-        p = subprocess.Popen(ariaCmd, shell=True, stdout=subprocess.PIPE)
+    
+    p = subprocess.Popen(ariaCmd, shell=True, stdout=subprocess.PIPE)
+    
+    exited = False
+    
+    report = ""
+    report_file = p.stdout
+    while(p.poll() == None):
+        report_file.flush()
+        line = report_file.readline()
+        if line != "":
+            print line.rstrip()
+            report += line
+        else:
+            time.sleep(0.5)
         
-        exited = False
+    if p.returncode != 0:
+        status = p.returncode
 
-        report = ""
-        report_file = p.stdout
-        while(p.poll() == None):
-            report_file.flush()
-            line = report_file.readline()
-            if line != "":
-                print line.rstrip()
-                report += line
-            else:
-                time.sleep(0.5)
-
-        print "returned with: ", p.returncode
-        
-    except subprocess.CalledProcessError, e:
-        status = e.returncode
-
-        print " ".join(["aria2c produced exit status", str(status), "with output:", report, "on URI", url])    
+        print " ".join(["aria2c produced exit status", str(status), "with output:\n", report, "on URI", url])    
 
         statusMessage = {
             2: "time out error",
@@ -79,9 +77,9 @@ def main(url, tags=None, properties=None, output_name=None):
             elif "Domain name not found" in report:
                 statusMessage = "domain name not found"
             else:
-                statusMessage = "failed to fetch file"
+                statusMessage = "failed to fetch file, please check URL validity"
 
-        raise dxpy.AppError(" ".join(["Fetch failed with code", str(status), ":", statusMessage]))
+        raise dxpy.AppError(statusMessage)
 
     print "Download of file completed successfully.  Uploading file into platform..."
 
