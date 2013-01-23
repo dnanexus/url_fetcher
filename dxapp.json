@@ -4,10 +4,6 @@
   "summary": "Fetch a file from a URL and upload it to the platform",
   "dxapi": "1.0.0",
   "version": "0.0.1",
-  "details": {
-    "contactUrl": "http://wiki.dnanexus.com/Apps/url_fetcher"
-  },
-  "resources": [],
   "inputSpec": [
     {
       "name": "url",
