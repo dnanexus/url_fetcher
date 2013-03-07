@@ -1,20 +1,22 @@
 {
   "name": "url_fetcher",
   "title": "URL Fetcher",
-  "summary": "Retrieves public datasets from servers or uploads data from your own server",
+  "summary": "Fetches (and uploads) a file from a remote URL (suitable for retrieving public datasets, or data from your own HTTP/FTP server)",
   "dxapi": "1.0.0",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "inputSpec": [
     {
       "name": "url",
       "label": "URL",
       "class": "string",
+      "help": "The URL to fetch data from.",
       "optional": false
     },
     {
       "name": "output_name",
-      "label": "Output Name",
+      "label": "Output name",
       "class": "string",
+      "help": "The name of the resulting file (optional; if not provided, the file will be called after the last part of the URL).",
       "optional": true
     },
     {
@@ -22,23 +24,28 @@
       "class": "array:string",
       "optional":true,
       "label":"Tags",
-      "help": "A set of tags (string labels) that will be added to the resulting Reads table object. (You can use tags and properties to better describe and organize your data)."
+      "help": "A set of tags (string labels) that will be added to the resulting file object. (You can use tags and properties to better describe and organize your data)."
     },
     {
       "name": "properties",
       "class":"hash",
       "optional":true,
       "label":"Properties",
-      "help":"A set of properties (key/value pairs) that will be added to the resulting Reads table object. (You can use tags and properties to better describe and organize your data)."
+      "help": "A set of properties (key/value pairs) that will be added to the resulting file object. (You can use tags and properties to better describe and organize your data)."
     }
   ],
 
   "outputSpec": [
     {
       "name": "file",
-      "class": "file"
+      "class": "file",
+      "label": "File",
+      "help": "The resulting file fetched from the URL."
     }
   ],
+  "details": {
+    "advancedInputs": ["tags", "properties"]
+  },
   "runSpec": {
     "interpreter": "python2.7",
     "file": "src/url_fetcher.py",

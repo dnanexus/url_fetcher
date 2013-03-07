@@ -1,14 +1,30 @@
-This app will download a remote file using the aria2c utility and then upload it into the platform.  The job log will display progress of the transfer and any connection error will be reported.
+This app fetches (and uploads) a file from a remote URL. It is suitable for retrieving datasets from public servers, or data from your own HTTP/FTP server.
+
+Supported protocols are http, https, and ftp. Here are some example URLs:
+
+    ENCODE gene annotations from the UCSC genome browser HTTP server:
+
+      http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeGencodeV11/supplemental/gencode.v11.annotation.gtf.gz
+
+
+    European population variant sites from the 1000 genomes FTP server:
+
+      ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/pilot_data/paper_data_sets/a_map_of_human_variation/exon/snps/CEU.exon.2010_09.sites.vcf.gz
+
 
 Inputs
 ------
 
-* **URL**:  A string containing the full URL of the file to be fetched into the system
-* **Output Name**: The resulting file object in the platform will have this name.  This is optional.  If not specified the name will be derived from the URL.
-* **Tags**: An array of strings to label the resulting object with.  Objects can be searched based on their tags.  One example of using tags would be to upload all files from a given patient tagged with their anonymized ID.
-* **Properties**:  A hash of key-value pairs describing the file.  For instance "source":"blood".
+* **URL**: The URL to fetch data from.
+* **Output name**: The name of the resulting file (optional; if not provided, the file will be called after the last part of the URL).
+
+Advanced Inputs
+---------------
+
+* **Tags**: A set of tags (string labels) that will be added to the resulting file object. (You can use tags and properties to better describe and organize your data).
+* **Properties**: A set of properties (key/value pairs) that will be added to the resulting file object. (You can use tags and properties to better describe and organize your data).
 
 Outputs
 -------
 
-* **File**:  A file object representing the newly uploaded file in the DNAnexus platform that has been tagged with given metadata.
+* **File**: The resulting file fetched from the URL.
