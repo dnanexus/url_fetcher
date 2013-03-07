@@ -76,7 +76,7 @@ def main(url, tags=None, properties=None, output_name=None):
             if "No route to host" in report:
                 statusMessage = "No route to host"
             elif "Failed to establish connection" in report:
-                statusMessage = "failed to eastablish connection"
+                statusMessage = "failed to establish connection"
             elif "Domain name not found" in report:
                 statusMessage = "domain name not found"
             else:
