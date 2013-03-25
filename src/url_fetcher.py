@@ -33,12 +33,12 @@ def main(url, tags=None, properties=None, output_name=None):
     if file_name == '':
         file_name = url
 
-    ariaCmd = " ".join(["aria2c", url, "-o", "fetched_from_url", "-x6", "-s6", "-j6", "--check-certificate=false"])
+    ariaCmd = ["aria2c", url, "-o", "fetched_from_url", "-x6", "-s6", "-j6", "--check-certificate=false"]
 
-    print "executing: ", ariaCmd
+    print "executing: ", " ".join(ariaCmd)
 
 
-    p = subprocess.Popen(ariaCmd, shell=True, stdout=subprocess.PIPE)
+    p = subprocess.Popen(ariaCmd, stdout=subprocess.PIPE)
 
     exited = False
 
