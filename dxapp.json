@@ -3,7 +3,7 @@
   "title": "URL Fetcher",
   "summary": "Fetches (and uploads) a file from a remote URL (suitable for retrieving public datasets, or data from your own HTTP/FTP server)",
   "dxapi": "1.0.0",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "inputSpec": [
     {
       "name": "url",
@@ -23,12 +23,14 @@
       "name": "tags",
       "class": "array:string",
       "optional":true,
+      "group": "Advanced Inputs",
       "label":"Tags",
       "help": "A set of tags (string labels) that will be added to the resulting file object. (You can use tags and properties to better describe and organize your data)."
     },
     {
       "name": "properties",
       "class":"hash",
+      "group": "Advanced Inputs",
       "optional":true,
       "label":"Properties",
       "help": "A set of properties (key/value pairs) that will be added to the resulting file object. (You can use tags and properties to better describe and organize your data)."
@@ -43,9 +45,6 @@
       "help": "The resulting file fetched from the URL."
     }
   ],
-  "details": {
-    "advancedInputs": ["tags", "properties"]
-  },
   "runSpec": {
     "interpreter": "python2.7",
     "file": "src/url_fetcher.py",
