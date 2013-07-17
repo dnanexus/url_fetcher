@@ -22,7 +22,7 @@
     {
       "name": "tags",
       "class": "array:string",
-      "optional":true,
+      "optional": true,
       "group": "Advanced Inputs",
       "label":"Tags",
       "help": "A set of tags (string labels) that will be added to the resulting file object. (You can use tags and properties to better describe and organize your data)."
@@ -31,12 +31,11 @@
       "name": "properties",
       "class":"hash",
       "group": "Advanced Inputs",
-      "optional":true,
+      "optional": true,
       "label":"Properties",
       "help": "A set of properties (key/value pairs) that will be added to the resulting file object. (You can use tags and properties to better describe and organize your data)."
     }
   ],
-
   "outputSpec": [
     {
       "name": "file",
