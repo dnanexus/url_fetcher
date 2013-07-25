@@ -3,7 +3,7 @@
   "title": "URL Fetcher",
   "summary": "Fetches (and uploads) a file from a remote URL (suitable for retrieving public datasets, or data from your own HTTP/FTP server)",
   "dxapi": "1.0.0",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "inputSpec": [
     {
       "name": "url",
