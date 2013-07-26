@@ -33,7 +33,7 @@ def main(url, tags=None, properties=None, output_name=None):
     if file_name == '':
         file_name = url
 
-    ariaCmd = ["aria2c", url, "-o", "fetched_from_url", "-x6", "-s6", "-j6", "--check-certificate=false"]
+    ariaCmd = ["aria2c", url, "-o", "fetched_from_url", "-x6", "-s6", "-j6", "--check-certificate=false", "--file-allocation=none"]
 
     print "executing: ", " ".join(ariaCmd)
 
