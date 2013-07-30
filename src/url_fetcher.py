@@ -35,7 +35,7 @@ def main(url, tags=None, properties=None, output_name=None):
 
     ariaCmd = ["aria2c", url, "-o", "fetched_from_url", "-x6", "-s6", "-j6", "--check-certificate=false", "--file-allocation=none"]
 
-    print "executing: ", " ".join(ariaCmd)
+    print "Executing: ", " ".join(ariaCmd)
 
 
     p = subprocess.Popen(ariaCmd, stdout=subprocess.PIPE)
@@ -59,28 +59,28 @@ def main(url, tags=None, properties=None, output_name=None):
         print " ".join(["aria2c produced exit status", str(status), "with output:\n", report, "on URI", url])
 
         statusMessage = {
-            2: "time out error",
-            3: "resource not found",
-            6: "network problem",
-            8: "resume not supported",
-            9: "ran out of disk space",
-            19: "name resolution failed",
+            2: "Timeout error",
+            3: "Resource not found",
+            6: "Network problem",
+            8: "Resume not supported",
+            9: "Ran out of disk space",
+            19: "Name resolution failed",
             21: "FTP command failed",
-            22: "unexpected or corrupt HTTP response header",
-            23: "excessive redirection",
-            24: "authorization failure",
-            25: "parse failure on bencoded file"
+            22: "Unexpected or corrupt HTTP response header",
+            23: "Excessive redirection",
+            24: "Authorization failure",
+            25: "Parse failure on bencoded file"
             }.get(status, "")
 
         if statusMessage == "":
             if "No route to host" in report:
                 statusMessage = "No route to host"
             elif "Failed to establish connection" in report:
-                statusMessage = "failed to establish connection"
+                statusMessage = "Failed to establish connection"
             elif "Domain name not found" in report:
-                statusMessage = "domain name not found"
+                statusMessage = "Domain name not found"
             else:
-                statusMessage = "failed to fetch file, please check URL validity"
+                statusMessage = "Failed to fetch file, please check URL validity"
 
         raise dxpy.AppError(statusMessage)
 
