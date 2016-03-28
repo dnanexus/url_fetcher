@@ -22,10 +22,21 @@ import subprocess
 import urlparse
 import random
 import time
+import urllib
 
-@dxpy.entry_point('main')
-def main(url, tags=None, properties=None, output_name=None):
+SAFETY_FACTOR = 0.9
+B_TO_MB = 1024.0 * 1024.0
+INSTANCE_SIZES = [('mem1_ssd1_x4', 75000), ('mem1_ssd1_x8', 155000),
+                  ('mem3_ssd2_x4', 750000)]
 
+
+def _get_free_space():
+    st = os.statvfs('.')
+    return st.f_bavail * st.f_frsize
+
+
+@dxpy.entry_point('download_url')
+def download_url(url, tags=None, properties=None, output_name=None):
     url_path = urlparse.urlparse(url).path
     file_name = os.path.basename(url_path)
     if file_name == '':
@@ -102,6 +113,41 @@ def main(url, tags=None, properties=None, output_name=None):
 
     output = {}
     output["file"] = dxpy.dxlink(fh.get_id())
+
+    return output
+
+
+def _find_appropriate_instance_type(file_size):
+    for instance, instance_size in INSTANCE_SIZES:
+        if file_size < SAFETY_FACTOR * instance_size:
+            return instance
+
+    return None
+
+
+@dxpy.entry_point('main')
+def main(url, tags=None, properties=None, output_name=None):
+    # Get the filesize
+    file_size = int(urllib.urlopen(url).info().getheaders('Content-Length')[0])
+    # Get the disk free space
+    free_space = _get_free_space()
+
+    # Now if the filesize is within 90% of the current free space, launch on
+    # a larger instance.
+    if file_size > free_space * SAFETY_FACTOR:
+        file_size /= B_TO_MB
+        instance_type = _find_appropriate_instance_type(file_size)
+        if not instance_type:
+            msg = 'This looks like a very big file - {0:0.1f} GB.  Try a larger instance.'
+            msg = msg.format(file_size / 1024.0)
+            raise dxpy.AppError(msg)
+
+        job_input = {'url': url, 'tags': tags, 'properties': properties, 'output_name': output_name}
+        job = dxpy.new_dxjob(job_input, 'download_url', instance_type=instance_type)
+
+        output = {'file': job.get_output_ref('file')}
+    else:
+        output = download_url(url, tags, properties, output_name)
 
     return output
 
