@@ -25,9 +25,9 @@ import time
 import urllib
 
 SAFETY_FACTOR = 0.9
-B_TO_MB = 1024.0 * 1024.0
+B_IN_MB = 1024.0 * 1024.0
 INSTANCE_SIZES = [('mem1_ssd1_x4', 75000), ('mem1_ssd1_x8', 155000),
-                  ('mem3_ssd2_x4', 750000)]
+                  ('mem1_ssd2_x4', 750000)]
 
 
 def _get_free_space():
@@ -127,15 +127,21 @@ def _find_appropriate_instance_type(file_size):
 
 @dxpy.entry_point('main')
 def main(url, tags=None, properties=None, output_name=None):
-    # Get the filesize
-    file_size = int(urllib.urlopen(url).info().getheaders('Content-Length')[0])
     # Get the disk free space
-    free_space = _get_free_space()
+    free_space = _get_free_space() / B_IN_MB
+    # Get the filesize
+    try:
+        file_size = int(urllib.urlopen(url).info().getheaders('Content-Length')[0])
+        file_size /= B_IN_MB
+    except IndexError:
+        # If we are not able to determine the size from the Content-Length
+        # header, just assume it is the largest supported size.
+        print "Could not determine file of size to fetch, so assuming it's very big!"
+        file_size = INSTANCE_SIZES[-1][1] * SAFETY_FACTOR - 1
 
     # Now if the filesize is within 90% of the current free space, launch on
     # a larger instance.
     if file_size > free_space * SAFETY_FACTOR:
-        file_size /= B_TO_MB
         instance_type = _find_appropriate_instance_type(file_size)
         if not instance_type:
             msg = 'This looks like a very big file - {0:0.1f} GB.  Try a larger instance.'
