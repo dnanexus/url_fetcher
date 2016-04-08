@@ -129,6 +129,10 @@ def _find_appropriate_instance_type(file_size):
 def main(url, tags=None, properties=None, output_name=None):
     # Get the disk free space
     free_space = _get_free_space() / B_IN_MB
+
+    # Remove trailing whitespaces in the url
+    url = url.rstrip()
+
     # Get the filesize
     try:
         file_size = int(urllib.urlopen(url).info().getheaders('Content-Length')[0])
