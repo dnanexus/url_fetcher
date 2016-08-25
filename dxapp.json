@@ -3,7 +3,7 @@
   "title": "URL Fetcher",
   "summary": "Fetches (and uploads) a file from a remote URL (suitable for retrieving public datasets, or data from your own HTTP/FTP server)",
   "dxapi": "1.0.0",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "inputSpec": [
     {
       "name": "url",
@@ -50,7 +50,8 @@
     "execDepends": [{"name": "aria2"}],
     "distribution": "Ubuntu",
     "release": "14.04",
-    "systemRequirements": {"*": {"instanceType": "mem1_ssd1_x2"}}
+    "systemRequirements": {"*": {"instanceType": "mem1_ssd1_x2"}},
+    "timeoutPolicy": {"*": {"hours": 24}}
   },
   "categories": ["Import"],
   "access": {"network": ["*"]}

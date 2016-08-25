@@ -30,6 +30,11 @@ INSTANCE_SIZES = [('mem1_ssd1_x4', 75000), ('mem1_ssd1_x8', 155000),
                   ('mem1_ssd2_x4', 750000)]
 
 
+class NoPasswdPromptURLopener(urllib.FancyURLopener):
+    def prompt_user_passwd(self, host, realm):
+        raise RuntimeError('This url is prompting for a username and password.')
+
+
 def _get_free_space():
     st = os.statvfs('.')
     return st.f_bavail * st.f_frsize
@@ -131,7 +136,8 @@ def main(url, tags=None, properties=None, output_name=None):
     free_space = _get_free_space() / B_IN_MB
     # Get the filesize
     try:
-        file_size = int(urllib.urlopen(url).info().getheaders('Content-Length')[0])
+        url_opener = NoPasswdPromptURLopener()
+        file_size = int(url_opener.open(url).info().getheaders('Content-Length')[0])
         file_size /= B_IN_MB
     except IndexError:
         # If we are not able to determine the size from the Content-Length
