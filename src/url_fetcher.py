@@ -26,8 +26,10 @@ import urllib
 
 SAFETY_FACTOR = 0.9
 B_IN_MB = 1024.0 * 1024.0
-INSTANCE_SIZES = [('mem1_ssd1_x4', 75000), ('mem1_ssd1_x8', 155000),
-                  ('mem1_ssd2_x4', 750000)]
+INSTANCE_SIZES = {'aws': [('mem1_ssd1_x4', 75000), ('mem1_ssd1_x8', 155000),
+                          ('mem1_ssd2_x4', 750000)],
+                  'azure': [('azure:mem2_ssd1_x2', 90000), ('azure:mem2_ssd1_x4', 190000),
+                            ('azure:mem2_ssd1_x16', 750000)]}
 
 
 class NoPasswdPromptURLopener(urllib.FancyURLopener):
@@ -122,8 +124,13 @@ def download_url(url, tags=None, properties=None, output_name=None):
     return output
 
 
-def _find_appropriate_instance_type(file_size):
-    for instance, instance_size in INSTANCE_SIZES:
+def _find_appropriate_instance_type(file_size, instance_type):
+    if instance_type.find('azure') >= 0:
+        platform = 'azure'
+    else:
+        platform = 'aws'
+
+    for instance, instance_size in INSTANCE_SIZES[platform]:
         if file_size < SAFETY_FACTOR * instance_size:
             return instance
 
@@ -132,6 +139,7 @@ def _find_appropriate_instance_type(file_size):
 
 @dxpy.entry_point('main')
 def main(url, tags=None, properties=None, output_name=None):
+    current_instance_type = dxpy.describe(dxpy.JOB_ID)['instanceType']
     # Get the disk free space
     free_space = _get_free_space() / B_IN_MB
     # Get the filesize
@@ -148,7 +156,7 @@ def main(url, tags=None, properties=None, output_name=None):
     # Now if the filesize is within 90% of the current free space, launch on
     # a larger instance.
     if file_size > free_space * SAFETY_FACTOR:
-        instance_type = _find_appropriate_instance_type(file_size)
+        instance_type = _find_appropriate_instance_type(file_size, current_instance_type)
         if not instance_type:
             msg = 'This looks like a very big file - {0:0.1f} GB.  Try a larger instance.'
             msg = msg.format(file_size / 1024.0)

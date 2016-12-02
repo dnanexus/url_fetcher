@@ -3,7 +3,7 @@
   "title": "URL Fetcher",
   "summary": "Fetches (and uploads) a file from a remote URL (suitable for retrieving public datasets, or data from your own HTTP/FTP server)",
   "dxapi": "1.0.0",
-  "version": "0.0.11",
+  "version": "0.1.1",
   "inputSpec": [
     {
       "name": "url",
@@ -47,7 +47,7 @@
   "runSpec": {
     "interpreter": "python2.7",
     "file": "src/url_fetcher.py",
-    "execDepends": [{"name": "aria2"}],
+    "bundledDepends": [{"name": "aria2c-1.23.0.tar.gz", "id": {"$dnanexus_link": "file-F0zZVFgKGbkJ0PvX5JGGKfPj"}}],
     "distribution": "Ubuntu",
     "release": "14.04",
     "systemRequirements": {"*": {"instanceType": "mem1_ssd1_x2"}},
