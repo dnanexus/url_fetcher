@@ -124,11 +124,18 @@ def download_url(url, tags=None, properties=None, output_name=None):
     return output
 
 
-def _find_appropriate_instance_type(file_size, instance_type):
+def _get_platform(instance_type):
     if instance_type.find('azure') >= 0:
         platform = 'azure'
     else:
         platform = 'aws'
+
+
+    return platform
+   
+
+def _find_appropriate_instance_type(file_size, instance_type):
+    platform = _get_platform(instance_type)
 
     for instance, instance_size in INSTANCE_SIZES[platform]:
         if file_size < SAFETY_FACTOR * instance_size:
@@ -151,7 +158,7 @@ def main(url, tags=None, properties=None, output_name=None):
         # If we are not able to determine the size from the Content-Length
         # header, just assume it is the largest supported size.
         print "Could not determine file of size to fetch, so assuming it's very big!"
-        file_size = INSTANCE_SIZES[-1][1] * SAFETY_FACTOR - 1
+        file_size = INSTANCE_SIZES[_get_platform(current_instance_type)][-1][1] * SAFETY_FACTOR - 1
 
     # Now if the filesize is within 90% of the current free space, launch on
     # a larger instance.
