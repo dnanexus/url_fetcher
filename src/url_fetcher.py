@@ -27,9 +27,9 @@ import urllib
 SAFETY_FACTOR = 0.9
 B_IN_MB = 1024.0 * 1024.0
 INSTANCE_SIZES = {'aws': [('mem1_ssd1_x4', 75000), ('mem1_ssd1_x8', 155000),
-                          ('mem1_ssd2_x4', 750000)],
-                  'azure': [('azure:mem2_ssd1_x2', 90000), ('azure:mem2_ssd1_x4', 190000),
-                            ('azure:mem2_ssd1_x16', 750000)]}
+                          ('mem1_ssd2_x4', 318000)],
+                  'azure': [('azure:mem2_ssd1_x2', 14000), ('azure:mem2_ssd1_x16', 114000),
+                            ('azure:mem3_ssd1_x16', 229000)]}
 
 
 class NoPasswdPromptURLopener(urllib.FancyURLopener):
