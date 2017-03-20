@@ -23,6 +23,9 @@ import urlparse
 import random
 import time
 import urllib
+import glob
+
+import dx_utils
 
 SAFETY_FACTOR = 0.9
 B_IN_MB = 1024.0 * 1024.0
@@ -45,78 +48,78 @@ def _get_free_space():
 @dxpy.entry_point('download_url')
 def download_url(url, tags=None, properties=None, output_name=None):
     url_path = urlparse.urlparse(url).path
-    file_name = os.path.basename(url_path)
-    if file_name == '':
-        file_name = url_path
-    if file_name == '':
-        file_name = url
 
-    ariaCmd = ["aria2c", url, "-o", "fetched_from_url", "-x6", "-s6", "-j6", "--check-certificate=false", "--file-allocation=none"]
+    with dx_utils.cd():
+        #ariaCmd = ["aria2c", '"{0}"'.format(url), "--user-agent", '"Mozilla/5.0"', "-x6", "-s6", "-j6", "--check-certificate=false", "--file-allocation=none"]
+        ariaCmd = 'aria2c  "{0}"  --user-agent "Mozilla/5.0" -x6 -s6 -j6 --check-certificate=false --file-allocation=none'.format(url)
 
-    print "Executing: ", " ".join(ariaCmd)
+        print "Executing: {0}".format(ariaCmd)
 
+        p = subprocess.Popen(ariaCmd, stdout=subprocess.PIPE, shell=True)
 
-    p = subprocess.Popen(ariaCmd, stdout=subprocess.PIPE)
+        exited = False
 
-    exited = False
-
-    report = ""
-    report_file = p.stdout
-    while(p.poll() == None):
-        report_file.flush()
-        line = report_file.readline()
-        if line != "":
-            print line.rstrip()
-            report += line
-        else:
-            time.sleep(0.5)
-
-    if p.returncode != 0:
-        status = p.returncode
-
-        print " ".join(["aria2c produced exit status", str(status), "with output:\n", report, "on URI", url])
-
-        statusMessage = {
-            2: "Timeout error",
-            3: "Resource not found",
-            6: "Network problem",
-            8: "Resume not supported",
-            9: "Ran out of disk space",
-            19: "Name resolution failed",
-            21: "FTP command failed",
-            22: "Unexpected or corrupt HTTP response header",
-            23: "Excessive redirection",
-            24: "Authorization failure",
-            25: "Parse failure on bencoded file"
-            }.get(status, "")
-
-        if statusMessage == "":
-            if "No route to host" in report:
-                statusMessage = "No route to host"
-            elif "Failed to establish connection" in report:
-                statusMessage = "Failed to establish connection"
-            elif "Domain name not found" in report:
-                statusMessage = "Domain name not found"
+        report = ""
+        report_file = p.stdout
+        while(p.poll() == None):
+            report_file.flush()
+            line = report_file.readline()
+            if line != "":
+                print line.rstrip()
+                report += line
             else:
-                statusMessage = "Failed to fetch file, please check URL validity"
+                time.sleep(0.5)
 
-        raise dxpy.AppError(statusMessage)
+        if p.returncode != 0:
+            status = p.returncode
 
-    print "Download of file completed successfully.  Uploading file into platform..."
+            print " ".join(["aria2c produced exit status", str(status), "with output:\n", report, "on URI", url])
 
-    fh = dxpy.upload_local_file("fetched_from_url", keep_open=True)
+            statusMessage = {
+                2: "Timeout error",
+                3: "Resource not found",
+                6: "Network problem",
+                8: "Resume not supported",
+                9: "Ran out of disk space",
+                19: "Name resolution failed",
+                21: "FTP command failed",
+                22: "Unexpected or corrupt HTTP response header",
+                23: "Excessive redirection",
+                24: "Authorization failure",
+                25: "Parse failure on bencoded file"
+                }.get(status, "")
 
-    if output_name != None and output_name != "":
-        fh.rename(output_name)
-    else:
-        fh.rename(file_name)
+            if statusMessage == "":
+                if "No route to host" in report:
+                    statusMessage = "No route to host"
+                elif "Failed to establish connection" in report:
+                    statusMessage = "Failed to establish connection"
+                elif "Domain name not found" in report:
+                    statusMessage = "Domain name not found"
+                else:
+                    statusMessage = "Failed to fetch file, please check URL validity"
 
-    if tags != None:
-        fh.add_tags(tags)
-    if properties != None:
-        fh.set_properties(properties)
+            raise dxpy.AppError(statusMessage)
 
-    fh.close()
+        print "Download of file completed successfully.  Uploading file into platform..."
+
+        fl = glob.glob("*")
+        if len(fl) != 1:
+            raise dxpy.AppError("Expected exactly one file to be downloaded.  Saw {0}.\n{1}".format(len(fl), "\n".join(fl)))
+
+        file_name = fl[0]
+
+        fh = dxpy.upload_local_file(file_name, keep_open=True)
+
+        if output_name != None and output_name != "":
+            fh.rename(output_name)
+
+        if tags != None:
+            fh.add_tags(tags)
+        if properties != None:
+            fh.set_properties(properties)
+
+        fh.close()
 
     output = {}
     output["file"] = dxpy.dxlink(fh.get_id())
@@ -152,7 +155,9 @@ def main(url, tags=None, properties=None, output_name=None):
     # Get the filesize
     try:
         url_opener = NoPasswdPromptURLopener()
-        file_size = int(url_opener.open(url).info().getheaders('Content-Length')[0])
+        url_info = url_opener.open(url).info()
+        
+        file_size = int(url_info.getheaders('Content-Length')[0])        
         file_size /= B_IN_MB
     except IndexError:
         # If we are not able to determine the size from the Content-Length
