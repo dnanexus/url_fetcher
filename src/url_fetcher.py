@@ -19,9 +19,6 @@
 import os
 import dxpy
 import subprocess
-import urlparse
-import random
-import time
 import urllib
 import glob
 
@@ -47,33 +44,25 @@ def _get_free_space():
 
 @dxpy.entry_point('download_url')
 def download_url(url, tags=None, properties=None, output_name=None):
-    url_path = urlparse.urlparse(url).path
-
     with dx_utils.cd():
-        #ariaCmd = ["aria2c", '"{0}"'.format(url), "--user-agent", '"Mozilla/5.0"', "-x6", "-s6", "-j6", "--check-certificate=false", "--file-allocation=none"]
-        ariaCmd = 'aria2c  "{0}"  --user-agent "Mozilla/5.0" -x6 -s6 -j6 --check-certificate=false --file-allocation=none'.format(url)
+        ariaCmd = ["aria2c", url, "--user-agent", "Mozilla/5.0", "-x6", "-j6", "--check-certificate=false", "--file-allocation=none"]
+        ariaCmd_str = " ",join(ariaCmd)
+        print "Executing:\n{0}".format(ariaCmd_str)
+        p = subprocess.Popen(
+            ariaCmd,
+            stdout=subprocess.PIPE,
+            # stderr=subprocess.PIPE
+        )
 
-        print "Executing: {0}".format(ariaCmd)
-
-        p = subprocess.Popen(ariaCmd, stdout=subprocess.PIPE, shell=True)
-
-        exited = False
-
-        report = ""
-        report_file = p.stdout
-        while(p.poll() == None):
-            report_file.flush()
-            line = report_file.readline()
-            if line != "":
-                print line.rstrip()
-                report += line
-            else:
-                time.sleep(0.5)
+        stdout, stderr = p.communicate()
 
         if p.returncode != 0:
             status = p.returncode
 
-            print " ".join(["aria2c produced exit status", str(status), "with output:\n", report, "on URI", url])
+            print " ".join([
+                "aria2c produced exit status", str(status),
+                "with output:\n", stdout,
+                "on URI", url])
 
             statusMessage = {
                 2: "Timeout error",
@@ -87,14 +76,14 @@ def download_url(url, tags=None, properties=None, output_name=None):
                 23: "Excessive redirection",
                 24: "Authorization failure",
                 25: "Parse failure on bencoded file"
-                }.get(status, "")
+            }.get(status, "")
 
             if statusMessage == "":
-                if "No route to host" in report:
+                if "No route to host" in stdout:
                     statusMessage = "No route to host"
-                elif "Failed to establish connection" in report:
+                elif "Failed to establish connection" in stdout:
                     statusMessage = "Failed to establish connection"
-                elif "Domain name not found" in report:
+                elif "Domain name not found" in stdout:
                     statusMessage = "Domain name not found"
                 else:
                     statusMessage = "Failed to fetch file, please check URL validity"
@@ -111,12 +100,12 @@ def download_url(url, tags=None, properties=None, output_name=None):
 
         fh = dxpy.upload_local_file(file_name, keep_open=True)
 
-        if output_name != None and output_name != "":
+        if output_name is not None and output_name != "":
             fh.rename(output_name)
 
-        if tags != None:
+        if tags is not None:
             fh.add_tags(tags)
-        if properties != None:
+        if properties is not None:
             fh.set_properties(properties)
 
         fh.close()
@@ -133,9 +122,8 @@ def _get_platform(instance_type):
     else:
         platform = 'aws'
 
-
     return platform
-   
+
 
 def _find_appropriate_instance_type(file_size, instance_type):
     platform = _get_platform(instance_type)
@@ -156,7 +144,7 @@ def main(url, tags=None, properties=None, output_name=None):
     try:
         url_opener = NoPasswdPromptURLopener()
         url_info = url_opener.open(url).info()
-        
+
         file_size = int(url_info.getheaders('Content-Length')[0])        
         file_size /= B_IN_MB
     except IndexError:
@@ -182,5 +170,6 @@ def main(url, tags=None, properties=None, output_name=None):
         output = download_url(url, tags, properties, output_name)
 
     return output
+
 
 dxpy.run()
