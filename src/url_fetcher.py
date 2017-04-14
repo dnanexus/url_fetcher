@@ -44,6 +44,7 @@ def _get_free_space():
 
 @dxpy.entry_point('download_url')
 def download_url(url, tags=None, properties=None, output_name=None):
+    url = url.strip() # assume no URL has end/start whitespaces
     with dx_utils.cd():
         ariaCmd = ["aria2c", url, "--user-agent", "Mozilla/5.0", "-x6", "-j6", "--check-certificate=false", "--file-allocation=none"]
         ariaCmd_str = " ",join(ariaCmd)
