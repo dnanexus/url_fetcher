@@ -44,10 +44,10 @@ def _get_free_space():
 
 @dxpy.entry_point('download_url')
 def download_url(url, tags=None, properties=None, output_name=None):
-    url = url.strip() # assume no URL has end/start whitespaces
+    url = url.strip()  # assume no URL has end/start whitespaces
     with dx_utils.cd():
         ariaCmd = ["aria2c", url, "--user-agent", "Mozilla/5.0", "-x6", "-j6", "--check-certificate=false", "--file-allocation=none"]
-        ariaCmd_str = " ",join(ariaCmd)
+        ariaCmd_str = " ".join(ariaCmd)
         print "Executing:\n{0}".format(ariaCmd_str)
         p = subprocess.Popen(
             ariaCmd,
@@ -146,7 +146,7 @@ def main(url, tags=None, properties=None, output_name=None):
         url_opener = NoPasswdPromptURLopener()
         url_info = url_opener.open(url).info()
 
-        file_size = int(url_info.getheaders('Content-Length')[0])        
+        file_size = int(url_info.getheaders('Content-Length')[0])
         file_size /= B_IN_MB
     except IndexError:
         # If we are not able to determine the size from the Content-Length
