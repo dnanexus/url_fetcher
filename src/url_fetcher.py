@@ -21,6 +21,7 @@ import dxpy
 import subprocess
 import urllib
 import glob
+import pipes
 
 import dx_utils
 
@@ -47,7 +48,7 @@ def download_url(url, tags=None, properties=None, output_name=None):
     url = url.strip()  # assume no URL has end/start whitespaces
     with dx_utils.cd():
         ariaCmd = ["aria2c", url, "--user-agent", "Mozilla/5.0", "-x6", "-j6", "--check-certificate=false", "--file-allocation=none"]
-        ariaCmd_str = " ".join(ariaCmd)
+        ariaCmd_str = " ".join([pipes.quote(a) for a in ariaCmd])
         print "Executing:\n{0}".format(ariaCmd_str)
         p = subprocess.Popen(
             ariaCmd,
