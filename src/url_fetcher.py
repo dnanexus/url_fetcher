@@ -22,6 +22,7 @@ import subprocess
 import urllib
 import glob
 import pipes
+import sys
 
 import dx_utils
 
@@ -56,14 +57,21 @@ def download_url(url, tags=None, properties=None, output_name=None):
             # stderr=subprocess.PIPE
         )
 
-        stdout, stderr = p.communicate()
+        report = ""
+        while True:
+            nextline = p.stdout.readline()
+            if nextline == "" and p.poll() is not None:
+                break
+            report += nextline
+            sys.stdout.write(nextline)
+            sys.stdout.flush()
 
         if p.returncode != 0:
             status = p.returncode
 
             print " ".join([
                 "aria2c produced exit status", str(status),
-                "with output:\n", stdout,
+                "with output:\n", report,
                 "on URI", url])
 
             statusMessage = {
@@ -81,11 +89,11 @@ def download_url(url, tags=None, properties=None, output_name=None):
             }.get(status, "")
 
             if statusMessage == "":
-                if "No route to host" in stdout:
+                if "No route to host" in report:
                     statusMessage = "No route to host"
-                elif "Failed to establish connection" in stdout:
+                elif "Failed to establish connection" in report:
                     statusMessage = "Failed to establish connection"
-                elif "Domain name not found" in stdout:
+                elif "Domain name not found" in report:
                     statusMessage = "Domain name not found"
                 else:
                     statusMessage = "Failed to fetch file, please check URL validity"
